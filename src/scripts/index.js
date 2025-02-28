@@ -14,6 +14,7 @@ const modInst = document.getElementById("modInst");
 const modSamples = document.getElementById("modSamples");
 const modProgress = document.getElementById("modProgress");
 const audioModal = document.getElementById("audioModal");
+const mainContent = document.getElementById("mainContent");
 
 // pick URLs
 const modulePage1 = "modarchive.org/index.php?request=view_by_moduleid"
@@ -60,6 +61,7 @@ function userInteracted() {
   audioModal.classList.add("fadeOut");
   setInterval(() => {
     audioModal.classList.remove("w-screen", "h-screen");
+    mainContent.classList.remove("hidden");
   }, 500);
 
   // initialize library

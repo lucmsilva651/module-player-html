@@ -13,3 +13,8 @@ To build:
 ```bash
 bun run build
 ```
+
+To build and watch for changes:
+```bash
+bun run dev
+```
