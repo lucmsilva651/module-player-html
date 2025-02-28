@@ -1,0 +1,6 @@
+src/css/index.css
+bun.lock
+bun.lockb
+package-lock.json
+node_modules
+.idea

@@ -1,0 +1,34 @@
+@import "https://fonts.googleapis.com/css2?family=Geist";
+@import "https://fonts.googleapis.com/css2?family=Geist+Mono";
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: cupcake, synthwave --default;
+}
+
+@theme {
+  --font-display: "Geist", sans-serif;
+  --font-mono: "Geist Mono", sans-serif;
+}
+
+html {
+  text-rendering: optimizeLegibility;
+  font-display: swap;
+}
+
+#audioModal {
+	line-height: 100vh;
+}
+
+#audioModal.fadeOut {
+	animation: fadeOut 500ms forwards;
+}
+
+@keyframes fadeOut {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		z-index: -604;
+	}
+}
