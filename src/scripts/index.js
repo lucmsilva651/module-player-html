@@ -12,6 +12,7 @@ const modTracker = document.getElementById("modTracker");
 const modLength = document.getElementById("modLength");
 const modInst = document.getElementById("modInst");
 const modSamples = document.getElementById("modSamples");
+const modProgress = document.getElementById("modProgress");
 const audioModal = document.getElementById("audioModal");
 
 // pick URLs
@@ -114,8 +115,18 @@ function userInteracted() {
     modType.innerText = meta.type.toUpperCase() || "Unknown";
     modTracker.innerText = meta.tracker || "Unknown";
     modLength.innerText = fmtMSS(meta.dur.round()) || "0:00";
+    modProgress.max = Number(meta.dur.round());
     modInst.innerText = meta.song.instruments["length"];
     modSamples.innerText = meta.song.samples["length"];
+  });
+
+  let lastUpdate = 0;
+  chiplib.onProgress(async (pos) => {
+    const now = Date.now();
+    if (now - lastUpdate > 2500) {
+      modProgress.value = Number(pos.pos.round());
+      lastUpdate = now;
+    };
   });
 
   play.addEventListener("click", () => {
