@@ -34,7 +34,7 @@ function showElements() {
 
 // stackoverflow hack #1 to round time
 function fmtMSS(seconds) {
-  return(seconds - (seconds %= 60)) / 60 + (9 < seconds ? ":" : ":0") + seconds
+  return (seconds - (seconds %= 60)) / 60 + (9 < seconds ? ":" : ":0") + seconds
 }
 
 // stackoverflow hack #2 to round time
@@ -118,6 +118,11 @@ function userInteracted() {
     modProgress.max = Number(meta.dur.round());
     modInst.innerText = meta.song.instruments["length"];
     modSamples.innerText = meta.song.samples["length"];
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: `${meta.title || "Untitled"} • ${fmtMSS(meta.dur.round())} • ID/URL: ${url.value}`,
+      album: `Tracker: ${meta.tracker || "Unknown"}`,
+      artist: `Type: ${meta.type.toUpperCase() || "Unknown"} • Instruments: ${meta.song.instruments["length"] || "0"} • Samples: ${meta.song.samples["length"] || "0"}`
+    });
   });
 
   let lastUpdate = 0;
@@ -127,9 +132,13 @@ function userInteracted() {
       modProgress.value = Number(pos.pos.round());
       lastUpdate = now;
     };
+    navigator.mediaSession.playbackState = "playing";
   });
 
+  // initial state when the page loads
+  navigator.mediaSession.playbackState = 'none';
   play.addEventListener("click", () => {
+    navigator.mediaSession.playbackState = "playing";
     // check if the URL input is empty
     if (url.value === "") {
       alertError("Please enter a URL!");
