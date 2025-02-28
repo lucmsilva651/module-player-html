@@ -111,7 +111,7 @@ function userInteracted() {
 
   // metadata
   chiplib.onMetadata(async (meta) => {
-    modTitle.innerText = meta.title || "No name";
+    modTitle.innerText = meta.title || "Untitled";
     modType.innerText = meta.type.toUpperCase() || "Unknown";
     modTracker.innerText = meta.tracker || "Unknown";
     modLength.innerText = fmtMSS(meta.dur.round()) || "0:00";
