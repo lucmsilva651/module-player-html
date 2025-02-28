@@ -38,7 +38,7 @@ function fmtMSS(seconds) {
 }
 
 // stackoverflow hack #2 to round time
-Number.prototype.round = function() {
+Number.prototype.round = function () {
   return Math.round(this);
 }
 
@@ -61,7 +61,7 @@ function userInteracted() {
   setInterval(() => {
     audioModal.classList.remove("w-screen", "h-screen");
   }, 500);
-  
+
   // initialize library
   window.chiplib = new chiptune3();
 
@@ -74,7 +74,7 @@ function userInteracted() {
     } else {
       // check if the URL is a direct link to a module, instead a ModArchive module ID
       if (isNaN(url) === true) {
-        await chiplib.load(url);	
+        await chiplib.load(url);
         return;
       } else {
         // assume that it is a ModArchive module ID
