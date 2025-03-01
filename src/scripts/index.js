@@ -43,6 +43,10 @@ Number.prototype.round = function () {
   return Math.round(this);
 }
 
+function intToFloat(num, decPlaces) {
+  return num.toFixed(decPlaces);
+}
+
 // error handling
 function alertError(error) {
   alert(`Error: ${error}`);
@@ -112,31 +116,73 @@ function userInteracted() {
   });
 
   // metadata
+  let actualDur = 0;
   chiplib.onMetadata(async (meta) => {
+    actualDur = meta.dur.round();
     modTitle.innerText = meta.title || "Untitled";
     modType.innerText = meta.type.toUpperCase() || "Unknown";
     modTracker.innerText = meta.tracker || "Unknown";
     modLength.innerText = fmtMSS(meta.dur.round()) || "0:00";
     modProgress.max = Number(meta.dur.round());
+    navigator.mediaSession.playbackState = "playing";
     modInst.innerText = meta.song.instruments["length"];
     modSamples.innerText = meta.song.samples["length"];
     navigator.mediaSession.metadata = new MediaMetadata({
-      title: `${meta.title || "Untitled"} • ${fmtMSS(meta.dur.round())} • ID/URL: ${url.value}`,
-      album: `Tracker: ${meta.tracker || "Unknown"}`,
-      artist: `Type: ${meta.type.toUpperCase() || "Unknown"} • Instruments: ${meta.song.instruments["length"] || "0"} • Samples: ${meta.song.samples["length"] || "0"}`
+      title: `${meta.title || "Untitled"}`,
+      album: `ID/URL: ${url.value}`,
+      artist: `Type: ${meta.type.toUpperCase() || "Unknown"} • Instruments: ${meta.song.instruments["length"] || "0"} • Samples: ${meta.song.samples["length"] || "0"}`,
+      artwork: [
+        { src: "https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png", type: "image/png" }
+      ]
     });
   });
 
   let lastUpdate = 0;
+  let actualPos = 0;
   chiplib.onProgress(async (pos) => {
+    actualPos = pos.pos.round();
     const now = Date.now();
     if (now - lastUpdate > 2500) {
-      modProgress.value = Number(pos.pos.round());
+      modProgress.value = Number(actualPos);
       lastUpdate = now;
+      navigator.mediaSession.setPositionState({
+        position: Number(actualPos),
+        duration: Number(actualDur)
+      });
     };
-    navigator.mediaSession.playbackState = "playing";
+
+    navigator.mediaSession.setActionHandler('play', () => {
+      navigator.mediaSession.playbackState = 'playing';
+      chiplib.unpause();
+    });
+
+    navigator.mediaSession.setActionHandler('pause', () => {
+      navigator.mediaSession.playbackState = 'playing';
+      chiplib.pause();
+    });
+
+    navigator.mediaSession.setActionHandler('stop', () => {
+      navigator.mediaSession.playbackState = 'none';
+      chiplib.stop();
+    });
+
+    navigator.mediaSession.setActionHandler('previoustrack', () => {
+      null;
+    });
+    
+    navigator.mediaSession.setActionHandler('nexttrack', () => {
+      null;
+    });
   });
 
+  navigator.mediaSession.setActionHandler('seekto', (event) => {
+    navigator.mediaSession.setPositionState({
+      position: Number(actualPos),
+      duration: Number(actualDur)
+    });
+    chiplib.seek(intToFloat(event.seekTime, 3));
+  });
+  
   // initial state when the page loads
   navigator.mediaSession.playbackState = 'none';
   play.addEventListener("click", () => {
