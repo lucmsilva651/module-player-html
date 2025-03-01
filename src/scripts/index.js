@@ -165,14 +165,6 @@ function userInteracted() {
       navigator.mediaSession.playbackState = 'none';
       chiplib.stop();
     });
-
-    navigator.mediaSession.setActionHandler('previoustrack', () => {
-      null;
-    });
-    
-    navigator.mediaSession.setActionHandler('nexttrack', () => {
-      null;
-    });
   });
 
   navigator.mediaSession.setActionHandler('seekto', (event) => {
@@ -182,7 +174,7 @@ function userInteracted() {
     });
     chiplib.seek(intToFloat(event.seekTime, 3));
   });
-  
+
   // initial state when the page loads
   navigator.mediaSession.playbackState = 'none';
   play.addEventListener("click", () => {
