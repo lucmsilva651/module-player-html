@@ -124,17 +124,21 @@ function userInteracted() {
     modTracker.innerText = meta.tracker || "Unknown";
     modLength.innerText = fmtMSS(meta.dur.round()) || "0:00";
     modProgress.max = Number(meta.dur.round());
-    navigator.mediaSession?.playbackState = "playing";
+    if (navigator.mediaSession) {
+      navigator.mediaSession.playbackState = "playing";
+    }
     modInst.innerText = meta.song.instruments["length"];
     modSamples.innerText = meta.song.samples["length"];
-    navigator.mediaSession?.metadata = new MediaMetadata({
-      title: `${meta.title || "Untitled"}`,
-      album: `ID/URL: ${url.value}`,
-      artist: `Type: ${meta.type.toUpperCase() || "Unknown"} • Instruments: ${meta.song.instruments["length"] || "0"} • Samples: ${meta.song.samples["length"] || "0"}`,
-      artwork: [
-        { src: "https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png", type: "image/png" }
-      ]
-    });
+    if (navigator.mediaSession) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `${meta.title || "Untitled"}`,
+        album: `ID/URL: ${url.value}`,
+        artist: `Type: ${meta.type.toUpperCase() || "Unknown"} • Instruments: ${meta.song.instruments["length"] || "0"} • Samples: ${meta.song.samples["length"] || "0"}`,
+        artwork: [
+          { src: "https://em-content.zobj.net/source/apple/391/musical-note_1f3b5.png", type: "image/png" }
+        ]
+      });
+    };
   });
 
   let lastUpdate = 0;
@@ -184,9 +188,13 @@ function userInteracted() {
   });
   
   // initial state when the page loads
-  navigator.mediaSession?.playbackState = 'none';
+  if (navigator.mediaSession) {
+    navigator.mediaSession.playbackState = 'none';
+  };
   play.addEventListener("click", () => {
-    navigator.mediaSession?.playbackState = "playing";
+    if (navigator.mediaSession) {
+      navigator.mediaSession.playbackState = "playing";
+    };
     // check if the URL input is empty
     if (url.value === "") {
       alertError("Please enter a URL!");
