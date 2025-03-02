@@ -15,6 +15,8 @@ const modSamples = document.getElementById("modSamples");
 const modProgress = document.getElementById("modProgress");
 const audioModal = document.getElementById("audioModal");
 const mainContent = document.getElementById("mainContent");
+const playToggle = document.getElementById("playToggle");
+const stopBtn = document.getElementById("stopBtn");
 
 // pick URLs
 const modulePage1 = "modarchive.org/index.php?request=view_by_moduleid"
@@ -214,6 +216,18 @@ function userInteracted() {
       showElements();
       loadModule(url.value);
     };
+  });
+
+  playToggle.addEventListener("click", () => {
+    chiplib.togglePause();
+    if (navigator.mediaSession) {
+      navigator.mediaSession.playbackState = chiplib.paused ? "paused" : "playing";
+    };
+  });
+
+  stopBtn.addEventListener("click", () => {
+    firstSteps();
+    chiplib.stop();
   });
 };
 
