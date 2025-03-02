@@ -155,13 +155,22 @@ function userInteracted() {
       });
     };
 
+    document.body.onkeyup = function(btn) {
+      if (btn.key == " " || btn.code == "Space") {
+        chiplib.togglePause();
+        if (navigator.mediaSession) {
+          navigator.mediaSession.playbackState = chiplib.paused ? "paused" : "playing";
+        };
+      };
+    };
+
     navigator.mediaSession?.setActionHandler('play', () => {
       navigator.mediaSession.playbackState = 'playing';
       chiplib.unpause();
     });
 
     navigator.mediaSession?.setActionHandler('pause', () => {
-      navigator.mediaSession.playbackState = 'playing';
+      navigator.mediaSession.playbackState = 'paused';
       chiplib.pause();
     });
 
