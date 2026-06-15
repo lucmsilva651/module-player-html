@@ -74,8 +74,22 @@ function userInteracted() {
   window.chiplib = new chiptune3();
 
   async function loadModule(url) {
-    await chiplib.load(url);
-    return;
+    // check if the URL is a ModArchive page instead of a direct link
+    if (url.includes(modulePage1 || modulePage2 || modulePage3)) {
+      const id = url.match(/(\d+)$/);
+      await chiplib.load(`${apiDownload}${id[0]}`);
+      return;
+    } else {
+      // check if the URL is a direct link to a module, instead a ModArchive module ID
+      if (isNaN(url) === true) {
+        await chiplib.load(url);
+        return;
+      } else {
+        // assume that it is a ModArchive module ID
+        await chiplib.load(`${apiDownload}${url}`);
+        return;
+      };
+    };
   };
 
   chiplib.onInitialized(() => {
